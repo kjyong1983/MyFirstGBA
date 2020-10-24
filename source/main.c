@@ -159,6 +159,32 @@ void drawSprite(int x, int y){
 	
 }
 
+bool showFractals = false;
+
+int t = 0;
+void drawFractals(){
+	// set mode3
+	*(unsigned int*)0x04000000 = 0x0403;
+
+	for (int x = 0; x < 240; x++)
+	{
+		for (int y = 0; y < 160; y++)
+		{
+			((unsigned short*) 0x06000000)[x+y*240] = ((((x&y)+t)&0x1F) << 10)|
+			((((x&y)+t*3)&0x1F)<<5) | ((((x&y)+t * 5)&0x1F) <<0);
+		}
+	}
+	++t;
+}
+
+void showOpeningText(){
+
+	consoleDemoInit();
+	SetMode( MODE_0 | BG0_ON );
+	iprintf("\x1b[10;6H-Yingyeothon 21st-\n");
+	iprintf("\x1b[11;8H-I am Yingyeo-\n");
+}
+
 
 //---------------------------------------------------------------------------------
 // Program entry point
@@ -183,10 +209,8 @@ int main(void) {
 
 	// testFunctions();
 
+	showOpeningText();
 
-
-	iprintf("\x1b[10;6H-Yingyeothon 21st-\n");
-	iprintf("\x1b[11;8H-I am Yingyeo-\n");
 
 
 	// // // scroll
@@ -236,7 +260,16 @@ int main(void) {
 		
 		// updateScroll();
 		
-		drawSprite(playerX, playerY);
+		// drawSprite(playerX, playerY);
+
+		if (showFractals)
+		{
+			drawFractals();
+		}
+		else
+		{
+			showOpeningText();
+		}
 
 		scanKeys();
 		UpdateInputs();
@@ -324,6 +357,8 @@ void UpdateInputs(){
 
 	if ( keys_pressed & KEY_START ) {
 		iprintf("\x1b[0;0HSTART\n");
+
+		showFractals = !showFractals;
 	}
 
 	if ( keys_released & KEY_START ) {
