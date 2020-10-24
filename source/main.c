@@ -186,7 +186,7 @@ int main(void) {
 
 
 	iprintf("\x1b[10;6H-Yingyeothon 21st-\n");
-
+	iprintf("\x1b[11;8H-I am Yingyeo-\n");
 
 
 	// // // scroll
@@ -228,6 +228,8 @@ int main(void) {
 
 	// SetMode( MODE_4 | BG2_ENABLE );
 
+
+	// SetMode(MODE_3);
 
 	while (1) {
 		VBlankIntrWait();
